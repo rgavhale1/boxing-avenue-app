@@ -210,7 +210,10 @@
 
 @media (max-width: 900px) {
   .navbar {
-    padding: 16px 24px;
+    padding: 16px 20px;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
   }
 
   .hamburger {
@@ -228,22 +231,45 @@
     gap: 0;
     padding: 16px 0;
     border-top: 1px solid var(--grey2);
+    z-index: 1000;
   }
 
   .navLinks.open {
     display: flex;
   }
 
-  .navLinks li a {
+  .navLinks li {
+    width: 100%;
+  }
+
+  .navLinks li a,
+  .navLinks li button {
     display: block;
+    width: 100%;
     padding: 14px 24px;
     font-size: 16px;
+    text-align: left;
+  }
+
+  .ctaGroup {
+    width: 100%;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 12px;
+    flex-wrap: wrap;
+  }
+
+  .ctaGroup button,
+  .adminBtn {
+    font-size: 12px;
+    padding: 9px 14px;
   }
 
   .ctaBtn {
     font-size: 11px;
     padding: 9px 16px;
   }
+
   .navLogoImage {
     height: 56px;
   }

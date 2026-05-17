@@ -39,7 +39,6 @@ export default function Programs({ onBookTrial }) {
 
   return (
     <section className={styles.programs} id="programs">
-
       {/* Slider + Testimonials Row */}
       <div className={styles.row}>
         <div className={styles.sliderColumn}>

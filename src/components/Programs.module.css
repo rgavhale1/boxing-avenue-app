@@ -1,12 +1,20 @@
 /* Programs section styles - cleaned and improved */
 .programs {
   background: var(--black);
-  padding: 80px 64px;
+  padding: 80px 48px;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .header {
-  text-align: center;
+  text-align: left;
   margin-bottom: 60px;
+  max-width: 720px;
+}
+
+.header h2,
+.header p {
+  margin: 0;
 }
 
 .overline {
@@ -414,6 +422,24 @@
     grid-template-columns: 1fr;
     max-width: 480px;
     margin: 0 auto;
+  }
+
+  .row {
+    flex-direction: column;
+  }
+
+  .sliderColumn,
+  .testimonialColumn {
+    flex: 1 1 100%;
+    width: 100%;
+  }
+
+  .testimonialColumn {
+    margin-top: 28px;
+  }
+
+  .testTitle {
+    font-size: 20px;
   }
 
   .featured {

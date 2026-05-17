@@ -2,6 +2,8 @@
   background: var(--black);
   padding: calc(var(--navbar-offset, 150px) + 20px) 48px 40px 48px;
   border-bottom: 1px solid var(--grey2);
+  max-width: 1200px;
+  margin: 0 auto;
 
   /* side-by-side layout */
   display: flex;
@@ -109,7 +111,8 @@
 
   .container {
     max-width: 100%;
-    margin-left: 24px;
+    margin-left: 0;
+    padding: 0;
   }
 
   .content {

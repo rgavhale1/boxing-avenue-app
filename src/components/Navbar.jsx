@@ -38,6 +38,12 @@ export default function Navbar({ onBookTrial }) {
 
   const handleNavClick = (id) => {
     setMenuOpen(false);
+
+    if (id === 'programs') {
+      navigate('/book');
+      return;
+    }
+
     // Navigate to home first, then scroll to section
     navigate('/');
     setTimeout(() => {

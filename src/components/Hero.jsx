@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import styles from './Hero.module.css';
 import ImageSlider from './ImageSlider';
 
@@ -26,9 +27,9 @@ export default function Hero({ onBookTrial }) {
             <button className={styles.bookBtn} onClick={onBookTrial}>
               BOOK A SESSION
             </button>
-            <a href="#programs" className={styles.programsBtn}>
+            <Link to="/book" className={styles.programsBtn}>
               OUR PROGRAMS →
-            </a>
+            </Link>
           </div>
         </div>
       </div>
