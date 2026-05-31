@@ -8,16 +8,49 @@ const AdminLogin = () => {
   const [password, setPassword] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!username || !password) {
       setErrorMessage('Please enter username and password.');
       return;
     }
 
-    localStorage.setItem('token', 'admin-token');
-    navigate('/admin');
+    setLoading(true);
+    setErrorMessage('');
+
+    try {
+      const response = await fetch('http://localhost:8080/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
+      });
+
+      if (!response.ok) {
+        setErrorMessage('Invalid username or password.');
+        setLoading(false);
+        return;
+      }
+
+      const data = await response.text();
+      
+      // Store the token from the response
+
+      if (data) {
+        localStorage.setItem('token', data);
+        navigate('/admin');
+      } else {
+        setErrorMessage('No token received from server.');
+        setLoading(false);
+      }
+    } catch (error) {
+      setErrorMessage('An error occurred. Please try again.');
+      console.error('Login error:', error);
+      setLoading(false);
+    }
   };
 
   return (
@@ -50,8 +83,8 @@ const AdminLogin = () => {
           }}
         />
 
-        <button type="button" onClick={handleLogin}>
-          Login
+        <button type="button" onClick={handleLogin} disabled={loading}>
+          {loading ? 'Logging in...' : 'Login'}
         </button>
 
         {errorMessage && <p className="error-text">{errorMessage}</p>}

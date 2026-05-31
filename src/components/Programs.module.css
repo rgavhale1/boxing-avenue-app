@@ -1,452 +1,165 @@
-/* Programs section styles - cleaned and improved */
 .programs {
   background: var(--black);
-  padding: 80px 48px;
-  max-width: 1200px;
+  padding: 80px var(--site-px);
+  width: 100%;
+}
+
+.row {
+  max-width: var(--site-max);
   margin: 0 auto;
+  width: 100%;
 }
 
-.header {
-  text-align: left;
-  margin-bottom: 60px;
-  max-width: 720px;
-}
+.sliderColumn { width: 100%; }
 
-.header h2,
-.header p {
-  margin: 0;
-}
-
-.overline {
-  font-family: var(--font-cond);
-  font-size: 12px;
-  letter-spacing: 5px;
-  color: var(--muted);
-  text-transform: uppercase;
-  margin-bottom: 12px;
-}
-
-.title {
-  font-family: var(--font-display);
-  font-size: clamp(40px, 6vw, 72px);
-  color: var(--white);
-  line-height: 1;
-  margin-bottom: 16px;
-}
-
-.title span {
-  color: var(--yellow);
-}
-
-.desc {
-  font-family: var(--font-body);
-  font-size: 16px;
-  color: var(--muted);
-}
-
-.grid {
+/* Slider + promo side by side */
+.sliderWrapper {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
+  grid-template-columns: 1fr 320px;
+  gap: 24px;
   align-items: start;
 }
 
-.cardsColumn {
-  display: block;
-}
+.sliderArea { min-width: 0; }
 
-.cardHeader {
+.promoColumn { display: flex; flex-direction: column; }
+
+.promoBanner {
+  width: 100%;
+  padding: 20px 22px;
+  background: linear-gradient(135deg, #0d0d0d 0%, #1a1a1a 100%);
+  border: 1.5px solid rgba(255,215,0,0.15);
+  border-radius: 16px 16px 0 0;
   display: flex;
-  justify-content: flex-end;
-  padding: 16px;
+  align-items: center;
+  gap: 14px;
 }
 
-.cardBody {
-  padding: 28px 24px 36px;
-}
-
-.card .tag {
-  background: rgba(0,0,0,0.45);
-  color: var(--white);
-  font-weight: 700;
-  padding: 6px 12px;
-  border-radius: 12px;
-}
-
-.cardMedia {
-  position: relative;
-  width: 100%;
-  height: 180px;
-  overflow: hidden;
-  border-radius: 12px 12px 0 0;
-  background: rgba(0,0,0,0.06);
-}
-
-.cardImg {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  filter: contrast(0.9) saturate(0.9) brightness(0.85);
-}
-
-.cardMedia .cardHeader {
-  position: absolute;
-  inset: 10px 10px auto auto;
-  display: flex;
-  justify-content: flex-end;
-  z-index: 2;
-}
-
-.progDesc {
-  color: rgba(255,255,255,0.9);
-  margin-bottom: 18px;
-}
-
-.card .price {
-  color: var(--yellow);
-}
-
-.programsColumn {
-  width: 420px;
-  margin-left: 36px;
-}
-
-.bookingPanel {
-  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));
-  padding: 28px;
-  border-radius: 14px;
-  border: 1px solid rgba(255,255,255,0.04);
-}
-
-.bookNowBtn {
-  margin-top: 18px;
-  width: 100%;
-  padding: 12px 14px;
+.promoLogo {
+  width: 52px; height: 52px; flex-shrink: 0;
   border-radius: 10px;
-  background: var(--yellow);
-  color: var(--black);
-  border: none;
-  font-weight: 700;
+  background: linear-gradient(135deg, #0f0f0f, #000);
+  border: 1.5px solid rgba(255,215,0,0.25);
+  display: grid; place-items: center;
+  color: var(--white);
+  font-family: var(--font-display);
+  font-size: 20px; letter-spacing: 2px;
 }
 
-/* New layout: slider + testimonials */
-.row {
-  display: flex;
-  gap: 28px;
-  align-items: stretch;
+.goldDivider {
+  width: 1.5px; height: 36px; flex-shrink: 0;
+  background: linear-gradient(180deg, transparent, rgba(255,215,0,0.5), transparent);
 }
 
-.sliderColumn {
-  flex: 1 1 60%;
+.promoText { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
+.promoLabel {
+  font-family: var(--font-cond);
+  font-size: 10px; letter-spacing: 3px;
+  color: rgba(255,215,0,0.75); text-transform: uppercase; font-weight: 600;
+}
+.promoTitle {
+  font-family: var(--font-display);
+  font-size: 24px; color: var(--white); letter-spacing: 2px; margin: 0;
+}
+.promoArrow { font-size: 24px; color: rgba(255,215,0,0.7); flex-shrink: 0; }
+
+.promoDescription {
+  font-family: var(--font-body);
+  font-size: 12.5px; color: rgba(255,255,255,0.72);
+  line-height: 1.7; margin: 0;
+  padding: 14px 18px;
+  background: linear-gradient(135deg, #111, #161616);
+  border: 1.5px solid rgba(255,215,0,0.1);
+  border-top: none;
+  border-radius: 0 0 16px 16px;
 }
 
-.testimonialColumn {
-  flex: 0 0 36%;
-  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));
-  padding: 24px;
-  border-radius: 12px;
-  border: 1px solid rgba(255,255,255,0.04);
-  display: flex;
-  flex-direction: column;
-}
+/* ══ WHAT CLIENTS SAY ══ */
+.testimonialStrip { margin-top: 48px; }
 
 .testTitleContainer {
-  margin-bottom: 12px;
-  padding-bottom: 8px;
-  border-bottom: 2px solid rgba(255,255,255,0.1);
+  margin-bottom: 28px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  text-align: center;
 }
 
 .testTitle {
   font-family: var(--font-condensed);
-  font-size: 24px;
-  letter-spacing: 4px;
-  color: rgba(255, 255, 255, 0.65);
-  margin: 0;
-  font-weight: 700;
-  text-transform: uppercase;
+  font-size: 24px; letter-spacing: 5px;
+  color: rgba(255,255,255,0.65);
+  font-weight: 700; text-transform: uppercase; margin: 0;
 }
 
-.testList {
+/* Grid layout — NO horizontal scroll */
+.testimonialRow {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+
+/* Each testimonial card */
+.smallTestCard {
+  background: linear-gradient(145deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 14px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  flex: 1;
+  justify-content: space-between;
+  gap: 16px;
+  transition: border-color 0.25s, transform 0.25s;
+}
+.smallTestCard:hover {
+  border-color: rgba(255,255,255,0.28);
+  transform: translateY(-3px);
 }
 
-.testCard {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.02) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 14px;
-  border-radius: 8px;
-  transition: all 0.3s ease;
-  position: relative;
-}
-
-.testCard:hover {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.04) 100%);
-  border-color: rgba(255, 255, 255, 0.2);
-  transform: translateX(6px);
-  box-shadow: 0 8px 20px rgba(255, 255, 255, 0.05);
-}
-
-.quoteWrapper {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  margin-bottom: 10px;
-}
-
+.quoteWrapper { display: flex; align-items: flex-start; gap: 6px; flex: 1; }
 .quoteMark {
-  font-size: 36px;
-  color: var(--white);
-  line-height: 0.8;
-  flex-shrink: 0;
-  font-weight: 700;
-  opacity: 0.9;
+  font-size: 28px; color: var(--yellow);
+  line-height: 0.75; flex-shrink: 0; font-weight: 700; opacity: 0.85;
+  margin-top: 2px;
 }
-
 .testQuote {
-  color: var(--off-white);
-  font-size: 13px;
-  margin: 0;
-  line-height: 1.6;
-  font-weight: 500;
-  font-family: var(--font-body);
-  letter-spacing: 0.3px;
+  color: var(--off-white); font-size: 12.5px;
+  line-height: 1.7; font-family: var(--font-body); margin: 0;
 }
 
-.clientInfo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 10px;
-}
-
+.clientInfo { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
 .clientAvatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
-  color: var(--white);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 11px;
-  flex-shrink: 0;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  width: 34px; height: 34px; border-radius: 50%;
+  background: rgba(245,197,24,0.12);
+  border: 1px solid rgba(245,197,24,0.4);
+  color: var(--yellow);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 11px; flex-shrink: 0;
+  font-family: var(--font-condensed); letter-spacing: 0.5px;
 }
-
 .testAuthor {
-  color: var(--white);
-  font-weight: 700;
-  font-size: 12px;
-  margin: 0;
-  letter-spacing: 0.5px;
-  font-family: var(--font-condensed);
+  color: var(--white); font-weight: 700; font-size: 13px;
+  letter-spacing: 0.5px; font-family: var(--font-condensed); margin: 0;
 }
+.clientRole { color: var(--muted); font-size: 11px; display: block; margin-top: 2px; }
 
-.clientRole {
-  color: var(--muted);
-  font-size: 11px;
-  display: block;
-  margin-top: 1px;
-}
-
-.card {
-  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));
-  border: 1px solid rgba(255,255,255,0.04);
-  border-radius: 16px;
-  padding: 36px 28px;
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-  position: relative;
-  animation: fadeInUp 0.6s ease both;
-  transition: border-color 0.3s ease, transform 0.3s ease;
-  box-shadow: 0 18px 40px rgba(0,0,0,0.45);
-}
-
-.card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 28px 60px rgba(0,0,0,0.55);
-}
-
-.featured {
-  border-color: var(--yellow);
-  background: linear-gradient(135deg, rgba(245,197,24,0.06), rgba(212,169,18,0.03));
-  transform: scale(1.03);
-}
-
-.featuredBadge {
-  position: absolute;
-  top: -14px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: var(--yellow);
-  color: var(--black);
-  font-family: var(--font-cond);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  padding: 5px 16px;
-  border-radius: 20px;
-  white-space: nowrap;
-}
-
-.tag {
-  font-family: var(--font-cond);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 3px;
-  border: 1px solid rgba(255,255,255,0.06);
-  display: inline-block;
-  padding: 6px 12px;
-  border-radius: 12px;
-  margin-bottom: 16px;
-  width: fit-content;
-}
-
-.progTitle {
-  font-family: var(--font-display);
-  font-size: 40px;
-  color: var(--white);
-  line-height: 1;
-  margin-bottom: 4px;
-}
-
-.progSub {
-  font-family: var(--font-cond);
-  font-size: 13px;
-  letter-spacing: 1px;
-  color: var(--muted);
-  margin-bottom: 16px;
-  text-transform: uppercase;
-}
-
-.progDesc {
-  font-family: var(--font-body);
-  font-size: 14px;
-  color: var(--muted);
-  line-height: 1.6;
-  margin-bottom: 24px;
-}
-
-.features {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-bottom: 28px;
-}
-
-.feature {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-family: var(--font-body);
-  font-size: 14px;
-  color: var(--off-white);
-}
-
-.check {
-  font-size: 14px;
-  font-weight: bold;
-}
-
-.priceSection {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  margin-bottom: 24px;
-  border-top: 1px solid var(--grey2);
-  padding-top: 20px;
-}
-
-.originalPrice {
-  font-family: var(--font-cond);
-  font-size: 18px;
-  color: var(--muted);
-  text-decoration: line-through;
-}
-
-.price {
-  font-family: var(--font-display);
-  font-size: 42px;
-  line-height: 1;
-}
-
-.priceSub {
-  font-family: var(--font-cond);
-  font-size: 13px;
-  color: var(--muted);
-  letter-spacing: 1px;
-}
-
-.btn {
-  width: 100%;
-  padding: 14px;
-  font-family: var(--font-cond);
-  font-size: 14px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  background: transparent;
-  border: 1.5px solid rgba(255,255,255,0.06);
-  border-radius: 10px;
-  transition: all 0.2s ease, transform 0.15s;
-}
-
-.btn:hover {
-  background: rgba(255,255,255,0.06);
-  transform: translateY(-2px);
-}
-
-.btnFeatured {
-  background: var(--yellow) !important;
-  color: var(--black) !important;
-  border-color: var(--yellow) !important;
-}
-
-.btnFeatured:hover {
-  background: var(--white) !important;
-  border-color: var(--white) !important;
+/* ══ RESPONSIVE ══ */
+@media (max-width: 1024px) {
+  .sliderWrapper { grid-template-columns: 1fr 280px; }
+  .testimonialRow { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 900px) {
-  .programs {
-    padding: 60px 24px;
-  }
+  .programs { padding: 56px var(--site-px); }
+  .sliderWrapper { grid-template-columns: 1fr; }
+  .goldDivider { display: none; }
+  .testimonialRow { grid-template-columns: repeat(2, 1fr); }
+}
 
-  .grid {
-    grid-template-columns: 1fr;
-    max-width: 480px;
-    margin: 0 auto;
-  }
-
-  .row {
-    flex-direction: column;
-  }
-
-  .sliderColumn,
-  .testimonialColumn {
-    flex: 1 1 100%;
-    width: 100%;
-  }
-
-  .testimonialColumn {
-    margin-top: 28px;
-  }
-
-  .testTitle {
-    font-size: 20px;
-  }
-
-  .featured {
-    transform: scale(1);
-  }
-
-  .featured:hover {
-    transform: translateY(-4px);
-  }
+@media (max-width: 640px) {
+  .programs { padding: 40px var(--site-px); }
+  .testTitle { font-size: 18px; letter-spacing: 3px; }
+  .testimonialRow { grid-template-columns: 1fr; gap: 12px; }
+  .smallTestCard { padding: 16px; }
+  .testQuote { font-size: 12px; }
+  .promoTitle { font-size: 20px; }
 }

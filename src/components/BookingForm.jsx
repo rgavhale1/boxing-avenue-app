@@ -1,10 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useLocation } from 'react-router-dom';
+import {
+  Crown,
+  Dumbbell,
+  RotateCcw,
+  Activity,
+  Target,
+  Zap,
+  Shield,
+  Home,
+  Cloud,
+  Repeat,
+} from 'lucide-react';
 import styles from "./BookingForm.module.css";
 
 const TIME_SLOTS = [
-  "06:00 AM", "07:00 AM", "08:00 AM",
-  "05:00 PM", "06:00 PM", "07:00 PM",
-  "08:00 PM",
+  "6 AM - 7 AM",
+  "7 AM - 8 AM",
+  "6 PM - 7 PM",
 ];
 
 const SERVICES = [
@@ -18,10 +31,16 @@ const PROGRAMS = [
     label: "Hybrid Program (One-on-One)",
     shortLabel: "Hybrid (One-on-One)",
     desc: "Personalized training for faster results",
-    price: "₹6500",
-    originalPrice: "₹10000",
-    features: ["5 days/week", "Unlimited access"],
-    icon: "🥊",
+    price: "₹15000",
+    originalPrice: null,
+    subtitle: "STRENGTH + CONDITIONING + SKILL",
+    features: [
+      { icon: <Dumbbell size={18} strokeWidth={2} />, title: "STRENGTH TRAINING", desc: "Build raw power and functional muscle with performance-driven workouts designed for real results." },
+      { icon: <RotateCcw size={18} strokeWidth={2} />, title: "MOBILITY", desc: "Improve joint health and movement efficiency to move better, train longer, and injury-free." },
+      { icon: <Repeat size={18} strokeWidth={2} />, title: "FLEXIBILITY", desc: "Enhance range of motion, reduce muscle tightness, and support better recovery through structured flexibility work." },
+      { icon: <Target size={18} strokeWidth={2} />, title: "SKILL DEVELOPMENT", desc: "Master boxing fundamentals, sharpen technique, timing, and footwork, and elevate your fight IQ with expert coaching." }
+    ],
+    icon: <Dumbbell size={24} strokeWidth={1.8} />,
     tag: "POPULAR",
   },
   {
@@ -29,10 +48,17 @@ const PROGRAMS = [
     label: "Elite Program",
     shortLabel: "Elite Program",
     desc: "Complete transformation & peak performance",
-    price: "₹13500",
-    originalPrice: "₹18000",
-    features: ["5 days/week", "Unlimited access"],
-    icon: "👑",
+    price: "₹20000",
+    originalPrice: "₹25000",
+    subtitle: "BREATHWORK + STRENGTH + COMBAT + MOBILITY",
+    features: [
+      { icon: <Cloud size={18} strokeWidth={2} />, title: "BREATHWORK", desc: "Master advanced breathing techniques to enhance oxygen efficiency, improve mental focus, reduce stress, and optimize performance during intense training sessions." },
+      { icon: <Dumbbell size={18} strokeWidth={2} />, title: "STRENGTH TRAINING", desc: "Build raw power and functional muscle with progressive overload and performance-driven workouts designed for peak athletic performance and real results." },
+      { icon: <Zap size={18} strokeWidth={2} />, title: "MUAY THAI AND BOXING", desc: "Master both disciplines with expert coaching in striking, footwork, clinch work, and technical proficiency to become a well-rounded fighter." },
+      { icon: <RotateCcw size={18} strokeWidth={2} />, title: "MOBILITY AND FLEXIBILITY", desc: "Enhance range of motion, reduce muscle tightness, prevent injuries, and support faster recovery through structured mobility and flexibility protocols." },
+      { icon: <Home size={18} strokeWidth={2} />, title: "GYM MEMBERSHIP", desc: "Unlimited access to our premium training facility with state-of-the-art equipment, allowing you to train whenever and however you need." }
+    ],
+    icon: <Crown size={24} strokeWidth={1.8} />,
     tag: "PREMIUM",
   },
 ];
@@ -53,10 +79,25 @@ export default function BookingForm({ isOpen = true, onClose = () => {}, embedde
     program: "",
     preferredTime: "",
   });
+  const location = useLocation();
+
+  useEffect(() => {
+    try {
+      const params = new URLSearchParams(location.search);
+      const programParam = params.get('program');
+      if (programParam) {
+        setForm((f) => ({ ...f, program: programParam }));
+      }
+    } catch (err) {
+      // ignore if location is not available
+    }
+  }, [location.search]);
+
   const [serviceOpen, setServiceOpen] = useState(false);
   const [programOpen, setProgramOpen] = useState(false);
   const [status, setStatus] = useState("idle");
   const [errorMsg, setErrorMsg] = useState("");
+  const [showSuccessPopup, setShowSuccessPopup] = useState(false);
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
   const selectService = (id) => { setForm({ ...form, service: id }); setServiceOpen(false); };
@@ -74,6 +115,23 @@ export default function BookingForm({ isOpen = true, onClose = () => {}, embedde
     setErrorMsg("");
     setStatus("loading");
     try {
+      // Calculate discount if applicable
+      let discountPercentage = null;
+      if (selectedProg?.originalPrice) {
+        const originalAmount = parseFloat(selectedProg.originalPrice.replace('₹', ''));
+        const discountedAmount = parseFloat(selectedProg.price.replace('₹', ''));
+        discountPercentage = Math.round(((originalAmount - discountedAmount) / originalAmount) * 100);
+      }
+
+      // Format program details as a single string
+      let programTypeString = "";
+      if (selectedProg) {
+        programTypeString = `${selectedProg.label}\n₹${selectedProg.price.replace('₹', '')}\n${selectedProg.subtitle}`;
+        if (selectedProg.originalPrice) {
+          programTypeString += `\n₹${selectedProg.originalPrice.replace('₹', '')}\nSAVE ${discountPercentage}%`;
+        }
+      }
+
       const response = await fetch("http://localhost:8080/api/join", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -81,7 +139,8 @@ export default function BookingForm({ isOpen = true, onClose = () => {}, embedde
           name: form.fullName,
           email: form.email,
           mobile: form.phone,
-          programType: form.program,
+          service: selectedService?.label || form.service,
+          programType: programTypeString,
           time: form.preferredTime,
         }),
       });
@@ -90,6 +149,7 @@ export default function BookingForm({ isOpen = true, onClose = () => {}, embedde
         throw new Error(data.message || "Booking failed. Please try again.");
       }
       setStatus("success");
+      setShowSuccessPopup(true);
     } catch (err) {
       setStatus("error");
       setErrorMsg(err.message || "Something went wrong. Please try again.");
@@ -99,6 +159,7 @@ export default function BookingForm({ isOpen = true, onClose = () => {}, embedde
   const handleReset = () => {
     setStatus("idle");
     setErrorMsg("");
+    setShowSuccessPopup(false);
     setForm({ fullName: "", email: "", phone: "", service: "", program: "", preferredTime: "" });
     onClose();
   };
@@ -107,264 +168,291 @@ export default function BookingForm({ isOpen = true, onClose = () => {}, embedde
 
   /* ─── LEFT PANEL: Program Cards ─── */
   const LeftPanel = (
-  <div className={styles.leftPanel}>
+    <div className={styles.leftPanel}>
 
-    {/* Program Cards stacked vertically */}
-    <div className={styles.programCards}>
-      {PROGRAMS.map((prog, idx) => {
-        const isSelected = form.program === prog.id;
+      {/* Header at top — Hook first, then programs */}
+      <div className={styles.leftHeader}>
+        <p className={styles.leftOverline}>PERSONAL TRAINING</p>
+        <h2 className={styles.leftTitle}>
+          YOUR GOALS.
+          <br />
+          <span>OUR MISSION.</span>
+        </h2>
+        <p className={styles.leftSub}>
+          Choose a program, take the first step towards your strongest version.
+        </p>
+      </div>
 
-        return (
-          <div
-  key={prog.id}
-  className={styles.progCard}
-  style={{ animationDelay: `${idx * 0.15}s` }}
->
-            {/* Glow border on selected */}
-            <div className={styles.progCardGlow} />
+      {/* Program Cards stacked vertically */}
+      <div className={styles.programCards}>
+        {PROGRAMS.map((prog, idx) => {
+          const isSelected = form.program === prog.id;
 
-            {/* Top row: tag + check */}
-            <div className={styles.progCardTopRow}>
-              <span
-                className={`${styles.progTag} ${
-                  isSelected ? styles.progTagActive : ""
-                }`}
-              >
-                {prog.tag}
-              </span>
+          return (
+            <div
+              key={prog.id}
+              className={styles.progCard}
+              style={{ animationDelay: `${idx * 0.15}s` }}
+            >
+              {/* Glow border on selected */}
+              <div className={styles.progCardGlow} />
 
-              {isSelected && (
-                <span className={styles.progCheck}>✓ SELECTED</span>
-              )}
-            </div>
-
-            {/* Title + desc */}
-            <div className={styles.progCardBody}>
-              <div className={styles.progIconWrap}>
-                <span className={styles.progIcon}>{prog.icon}</span>
-              </div>
-
-              <div>
-                <h3 className={styles.progName}>{prog.label}</h3>
-                <p className={styles.progDesc}>{prog.desc}</p>
-              </div>
-            </div>
-
-            {/* Price row */}
-            <div className={styles.progPriceRow}>
-              <span className={styles.progPrice}>{prog.price}</span>
-
-              <span className={styles.progOriginal}>
-                {prog.originalPrice}
-              </span>
-
-              <span className={styles.progSaveBadge}>
-                SAVE {prog.id === "hybrid" ? "35%" : "25%"}
-              </span>
-            </div>
-
-            {/* Features */}
-            <div className={styles.progFeatures}>
-              {prog.features.map((f) => (
-                <span key={f} className={styles.progFeat}>
-                  <span className={styles.progFeatDot} />
-                  {f}
+              {/* Top row: tag + check */}
+              <div className={styles.progCardTopRow}>
+                <span
+                  className={`${styles.progTag} ${
+                    isSelected ? styles.progTagActive : ""
+                  }`}
+                >
+                  {prog.tag}
                 </span>
-              ))}
+
+                {isSelected && (
+                  <span className={styles.progCheck}>✓ SELECTED</span>
+                )}
+              </div>
+
+              {/* Title + inline price */}
+              <div className={styles.progCardBody}>
+                <div className={styles.progTitleRow}>
+                  <h3 className={styles.progName}>{prog.label}</h3>
+                  <span className={styles.progPriceInline}>{prog.price}</span>
+                </div>
+                {prog.subtitle && <p className={styles.progSubtitle}>{prog.subtitle}</p>}
+              </div>
+
+              {/* Secondary pricing info */}
+              {prog.originalPrice && (
+                <div className={styles.progPriceRow}>
+                  <span className={styles.progOriginal}>
+                    {prog.originalPrice}
+                  </span>
+                  <span className={styles.progSaveBadge}>
+                    SAVE {prog.id === "hybrid" ? "35%" : "20%"}
+                  </span>
+                </div>
+              )}
+
+              {/* Features */}
+              <div className={styles.progFeatures}>
+                {prog.features.map((f, idx) => (
+                  <div key={idx} className={styles.progFeat}>
+                    {typeof f === 'string' ? (
+                      <>
+                        <span className={styles.progFeatDot} />
+                        {f}
+                      </>
+                    ) : (
+                      <div className={styles.progFeatureDetail}>
+                        <div className={styles.progFeatureHeading}>
+                          <span className={styles.progFeatureIcon}>{f.icon}</span>
+                          <div className={styles.progFeatureTitle}>{f.title}</div>
+                        </div>
+                        <div className={styles.progFeatureDesc}>{f.desc}</div>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+
             </div>
-
-          </div>
-        );
-      })}
-    </div>
-
-    {/* Header moved BELOW cards */}
-    <div className={styles.leftHeader}>
-      <p className={styles.leftOverline}>PERSONAL TRAINING</p>
-
-      <h2 className={styles.leftTitle}>
-        YOUR GOALS.
-        <br />
-        <span>OUR MISSION.</span>
-      </h2>
-
-      <p className={styles.leftSub}>
-        Choose a program, take the first step towards your strongest version.
-      </p>
-    </div>
-
-    {/* Bottom trust badges */}
-    <div className={styles.leftTrustRow}>
-      <div className={styles.trustItem}>
-        <span>🛡</span> Certified Coaches
+          );
+        })}
       </div>
 
-      <div className={styles.trustItem}>
-        <span>📅</span> Flexible Schedule
+      {/* Bottom trust badges */}
+      <div className={styles.leftTrustRow}>
+        <div className={styles.trustItem}>
+          <span>🛡</span> Certified Coaches
+        </div>
+        <div className={styles.trustItem}>
+          <span>📅</span> Flexible Schedule
+        </div>
+        <div className={styles.trustItem}>
+          <span>🏆</span> Real Results
+        </div>
       </div>
 
-      <div className={styles.trustItem}>
-        <span>🏆</span> Real Results
-      </div>
     </div>
-  </div>
-);
+  );
 
   /* ─── RIGHT PANEL: Booking Form ─── */
   const FormContent = (
     <>
-      {status === "success" ? (
-        <div className={styles["bs-success"]}>
-          <div className={styles["bs-success-icon"]}>✓</div>
-          <h2 className={styles["bs-success-title"]}>BOOKING CONFIRMED!</h2>
-          <p className={styles["bs-success-msg"]}>
-            You'll receive a confirmation via email &amp; WhatsApp shortly.
-          </p>
-          <div className={styles["bs-success-detail"]}>
-            {selectedService && <span><strong>Service:</strong> {selectedService.label}</span>}
-            <span><strong>Program:</strong> {selectedProg?.label}</span>
-            <span><strong>Time:</strong> {form.preferredTime}</span>
-            <span><strong>Name:</strong> {form.fullName}</span>
+      <div className={styles["bs-form-header"]}>
+        <h2 className={styles["bs-form-title"]}>BOOK A SESSION</h2>
+        <div className={styles["bs-form-divider"]} />
+        <p className={styles["bs-form-sub"]}>
+          Take the first step towards<br />a stronger, healthier you.
+        </p>
+      </div>
+
+      <div className={styles["bs-form"]}>
+
+        {/* Full Name */}
+        <div className={styles["bs-field"]}>
+          <label className={styles["bs-label"]}>Full Name</label>
+          <div className={styles["bs-input-wrap"]}>
+            <span className={styles["bs-input-icon"]}>👤</span>
+            <input className={styles["bs-input"]} name="fullName" type="text"
+              placeholder="Enter your name" value={form.fullName} onChange={handleChange} />
           </div>
-          <button className={styles["bs-reset-btn"]} onClick={handleReset}>
-            BOOK ANOTHER SESSION →
-          </button>
         </div>
-      ) : (
-        <>
-          <div className={styles["bs-form-header"]}>
-            <h2 className={styles["bs-form-title"]}>BOOK A SESSION</h2>
-            <div className={styles["bs-form-divider"]} />
-            <p className={styles["bs-form-sub"]}>
-              Take the first step towards<br />a stronger, healthier you.
-            </p>
+
+        {/* Email */}
+        <div className={styles["bs-field"]}>
+          <label className={styles["bs-label"]}>Email Address</label>
+          <div className={styles["bs-input-wrap"]}>
+            <span className={styles["bs-input-icon"]}>✉</span>
+            <input className={styles["bs-input"]} name="email" type="email"
+              placeholder="Enter your email" value={form.email} onChange={handleChange} />
           </div>
+        </div>
 
-          <div className={styles["bs-form"]}>
+        {/* Phone */}
+        <div className={styles["bs-field"]}>
+          <label className={styles["bs-label"]}>Phone Number</label>
+          <div className={styles["bs-input-wrap"]}>
+            <span className={styles["bs-input-icon"]}>📞</span>
+            <input className={styles["bs-input"]} name="phone" type="tel"
+              placeholder="+91 98765 43210" value={form.phone} onChange={handleChange} />
+          </div>
+        </div>
 
-            {/* Full Name */}
-            <div className={styles["bs-field"]}>
-              <label className={styles["bs-label"]}>Full Name</label>
-              <div className={styles["bs-input-wrap"]}>
-                <span className={styles["bs-input-icon"]}>👤</span>
-                <input className={styles["bs-input"]} name="fullName" type="text"
-                  placeholder="Enter your name" value={form.fullName} onChange={handleChange} />
-              </div>
-            </div>
-
-            {/* Email */}
-            <div className={styles["bs-field"]}>
-              <label className={styles["bs-label"]}>Email Address</label>
-              <div className={styles["bs-input-wrap"]}>
-                <span className={styles["bs-input-icon"]}>✉</span>
-                <input className={styles["bs-input"]} name="email" type="email"
-                  placeholder="Enter your email" value={form.email} onChange={handleChange} />
-              </div>
-            </div>
-
-            {/* Phone */}
-            <div className={styles["bs-field"]}>
-              <label className={styles["bs-label"]}>Phone Number</label>
-              <div className={styles["bs-input-wrap"]}>
-                <span className={styles["bs-input-icon"]}>📞</span>
-                <input className={styles["bs-input"]} name="phone" type="tel"
-                  placeholder="+91 98765 43210" value={form.phone} onChange={handleChange} />
-              </div>
-            </div>
-
-            {/* Service */}
-            <div className={styles["bs-field"]}>
-              <label className={styles["bs-label"]}>Service</label>
-              <div
-                className={`${styles["bs-select-trigger"]} ${serviceOpen ? styles["open"] : ""}`}
-                onClick={() => { setServiceOpen(!serviceOpen); setProgramOpen(false); }}
-              >
-                <span className={styles["bs-input-icon"]}>{selectedService ? selectedService.icon : "🥊"}</span>
-                <span className={`${styles["bs-select-val"]} ${!form.service ? styles["placeholder"] : ""}`}>
-                  {selectedService ? selectedService.label : "Select Service"}
-                </span>
-                <span className={`${styles["bs-chevron"]} ${serviceOpen ? styles["up"] : ""}`}>▾</span>
-              </div>
-              {serviceOpen && (
-                <div className={styles["bs-dropdown"]}>
-                  {SERVICES.map((service) => (
-                    <div key={service.id}
-                      className={`${styles["bs-dropdown-item"]} ${form.service === service.id ? styles["active"] : ""}`}
-                      onClick={() => selectService(service.id)}>
-                      <span className={styles["bs-dd-icon"]}>{service.icon}</span>
-                      <div className={styles["bs-dd-text"]}>
-                        <span className={styles["bs-dd-label"]}>{service.label}</span>
-                      </div>
-                      {form.service === service.id && <span className={styles["bs-dd-check"]}>✓</span>}
-                    </div>
-                  ))}
+        {/* Service */}
+        <div className={styles["bs-field"]}>
+          <label className={styles["bs-label"]}>Service</label>
+          <div
+            className={`${styles["bs-select-trigger"]} ${serviceOpen ? styles["open"] : ""}`}
+            onClick={() => { setServiceOpen(!serviceOpen); setProgramOpen(false); }}
+          >
+            <span className={styles["bs-input-icon"]}>{selectedService ? selectedService.icon : "🥊"}</span>
+            <span className={`${styles["bs-select-val"]} ${!form.service ? styles["placeholder"] : ""}`}>
+              {selectedService ? selectedService.label : "Select Service"}
+            </span>
+            <span className={`${styles["bs-chevron"]} ${serviceOpen ? styles["up"] : ""}`}>▾</span>
+          </div>
+          {serviceOpen && (
+            <div className={styles["bs-dropdown"]}>
+              {SERVICES.map((service) => (
+                <div key={service.id}
+                  className={`${styles["bs-dropdown-item"]} ${form.service === service.id ? styles["active"] : ""}`}
+                  onClick={() => selectService(service.id)}>
+                  <span className={styles["bs-dd-icon"]}>{service.icon}</span>
+                  <div className={styles["bs-dd-text"]}>
+                    <span className={styles["bs-dd-label"]}>{service.label}</span>
+                  </div>
                 </div>
-              )}
+              ))}
             </div>
+          )}
+        </div>
 
-            {/* Program Type */}
-            <div className={styles["bs-field"]}>
-              <label className={styles["bs-label"]}>Program Type</label>
-              <div
-                className={`${styles["bs-select-trigger"]} ${programOpen ? styles["open"] : ""}`}
-                onClick={() => { setProgramOpen(!programOpen); setServiceOpen(false); }}
-              >
-                <span className={styles["bs-input-icon"]}>{selectedProg ? selectedProg.icon : "🏋"}</span>
-                <span className={`${styles["bs-select-val"]} ${!form.program ? styles["placeholder"] : ""}`}>
-                  {selectedProg ? selectedProg.shortLabel : "Select Program"}
-                </span>
-                <span className={`${styles["bs-chevron"]} ${programOpen ? styles["up"] : ""}`}>▾</span>
-              </div>
-              {programOpen && (
-                <div className={styles["bs-dropdown"]}>
-                  {PROGRAMS.map((prog) => (
-                    <div key={prog.id}
-                      className={`${styles["bs-dropdown-item"]} ${form.program === prog.id ? styles["active"] : ""}`}
-                      onClick={() => selectProgram(prog.id)}>
-                      <span className={styles["bs-dd-icon"]}>{prog.icon}</span>
-                      <div className={styles["bs-dd-text"]}>
-                        <span className={styles["bs-dd-label"]}>{prog.label}</span>
-                        <div className={styles.ddPriceRow}>
-                          <span className={styles.ddPrice}>{prog.price}</span>
-                          <span className={styles.ddOrig}>{prog.originalPrice}</span>
-                        </div>
-                        <span className={styles["bs-dd-desc"]}>{prog.desc}</span>
-                      </div>
-                      {form.program === prog.id && <span className={styles["bs-dd-check"]}>✓</span>}
+        {/* Program Type */}
+        <div className={styles["bs-field"]}>
+          <label className={styles["bs-label"]}>Program Type</label>
+          <div
+            className={`${styles["bs-select-trigger"]} ${programOpen ? styles["open"] : ""}`}
+            onClick={() => { setProgramOpen(!programOpen); setServiceOpen(false); }}
+          >
+            <span className={styles["bs-input-icon"]}>{selectedProg ? selectedProg.icon : "🏋"}</span>
+            <span className={`${styles["bs-select-val"]} ${!form.program ? styles["placeholder"] : ""}`}>
+              {selectedProg ? selectedProg.shortLabel : "Select Program"}
+            </span>
+            <span className={`${styles["bs-chevron"]} ${programOpen ? styles["up"] : ""}`}>▾</span>
+          </div>
+          {programOpen && (
+            <div className={styles["bs-dropdown"]}>
+              {PROGRAMS.map((prog) => (
+                <div key={prog.id}
+                  className={`${styles["bs-dropdown-item"]} ${form.program === prog.id ? styles["active"] : ""}`}
+                  onClick={() => selectProgram(prog.id)}>
+                  <div className={styles["bs-dd-text"]}>
+                    <span className={styles["bs-dd-label"]}>{prog.label}</span>
+                    <div className={styles.ddPriceRow}>
+                      <span className={styles.ddPrice}>{prog.price.replace('₹', '')}</span>
+                      {prog.originalPrice && <span className={styles.ddOrig}>{prog.originalPrice.replace('₹', '')}</span>}
                     </div>
-                  ))}
+                    <span className={styles["bs-dd-subtitle"]}>{prog.subtitle}</span>
+                  </div>
                 </div>
-              )}
+              ))}
             </div>
+          )}
+        </div>
 
-            {/* Time Slots */}
-            <div className={styles["bs-field"]}>
-              <div className={styles.timeLabelRow}>
-                <label className={styles["bs-label"]}>Select Time Slot</label>
-                <span className={styles.tzBadge}>🕐 IST</span>
+        {/* Time Selection */}
+        <div className={styles["bs-field"]}>
+          <div className={styles.timeLabelRow}>
+            <label className={styles["bs-label"]}>Select Time</label>
+            <span className={styles.tzBadge}>🕐 IST</span>
+          </div>
+          <div className={styles["bs-time-select-wrap"]}>
+            <select
+              name="preferredTime"
+              value={form.preferredTime}
+              onChange={handleChange}
+              className={styles["bs-time-select"]}
+            >
+              <option value="" disabled>
+                Select Time
+              </option>
+              {TIME_SLOTS.map((slot) => (
+                <option key={slot} value={slot}>
+                  {slot}
+                </option>
+              ))}
+            </select>
+            <span className={styles["bs-select-arrow"]}>▾</span>
+          </div>
+        </div>
+
+        {errorMsg && <div className={styles["bs-error"]}>{errorMsg}</div>}
+
+        <button
+          className={`${styles["bs-submit"]} ${status === "loading" ? styles["loading"] : ""}`}
+          onClick={handleSubmit} disabled={status === "loading"} type="button">
+          {status === "loading" ? <span className={styles["bs-spinner"]} /> : "BOOK MY SESSION →"}
+        </button>
+
+        <p className={styles["bs-footer-note"]}>
+          ✓ You'll receive a confirmation via email.
+        </p>
+      </div>
+    </>
+  );
+
+  /* ─── SUCCESS POPUP MODAL ─── */
+  const SuccessPopup = () => (
+    <>
+      {showSuccessPopup && (
+        <>
+          {/* Overlay */}
+          <div
+            className={styles["bs-popup-overlay"]}
+            onClick={handleReset}
+          />
+          {/* Modal */}
+          <div className={styles["bs-popup-modal"]}>
+            <div className={styles["bs-popup-content"]}>
+              <div className={styles["bs-popup-icon"]}>✓</div>
+              <h2 className={styles["bs-popup-title"]}>BOOKING CONFIRMED!</h2>
+              <p className={styles["bs-popup-msg"]}>
+                Your session has been booked successfully!
+              </p>
+              <div className={styles["bs-popup-detail"]}>
+                {selectedService && <span><strong>Service:</strong> {selectedService.label}</span>}
+                <span><strong>Program:</strong> {selectedProg?.label}</span>
+                <span><strong>Time:</strong> {form.preferredTime}</span>
+                <span><strong>Name:</strong> {form.fullName}</span>
               </div>
-              <div className={styles["bs-time-grid"]}>
-                {TIME_SLOTS.map((slot) => (
-                  <button key={slot}
-                    className={`${styles["bs-time-btn"]} ${form.preferredTime === slot ? styles["selected"] : ""}`}
-                    onClick={() => selectTime(slot)} type="button">
-                    {slot}
-                  </button>
-                ))}
-              </div>
+              <p className={styles["bs-popup-email"]}>
+                Confirmation email sent to <strong>{form.email}</strong>
+              </p>
+              <button className={styles["bs-popup-btn"]} onClick={handleReset}>
+                BOOK ANOTHER SESSION →
+              </button>
             </div>
-
-            {errorMsg && <div className={styles["bs-error"]}>{errorMsg}</div>}
-
-            <button
-              className={`${styles["bs-submit"]} ${status === "loading" ? styles["loading"] : ""}`}
-              onClick={handleSubmit} disabled={status === "loading"} type="button">
-              {status === "loading" ? <span className={styles["bs-spinner"]} /> : "BOOK MY SESSION →"}
-            </button>
-
-            <p className={styles["bs-footer-note"]}>
-              ✓ You'll receive a confirmation via email &amp; WhatsApp
-            </p>
           </div>
         </>
       )}
@@ -374,6 +462,7 @@ export default function BookingForm({ isOpen = true, onClose = () => {}, embedde
   if (embedded) {
     return (
       <div className={styles["bs-page"]}>
+        <SuccessPopup />
         <div className={styles["bs-right"]}>{FormContent}</div>
       </div>
     );
@@ -381,6 +470,7 @@ export default function BookingForm({ isOpen = true, onClose = () => {}, embedde
 
   return (
     <div className={styles["bs-page"]}>
+      <SuccessPopup />
       <main className={styles["bs-main"]}>
         {/* LEFT: Program Cards */}
         <div className={styles["bs-left"]}>

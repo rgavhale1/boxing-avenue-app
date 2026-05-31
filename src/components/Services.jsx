@@ -33,18 +33,20 @@ const services = [
 export default function Services() {
   return (
     <section className={styles.services} id="services">
-      <div className={styles.sectionTag}>TRAINING SERVICES</div>
-      <div className={styles.grid}>
-        {services.map((s, i) => (
-          <div key={i} className={styles.card} style={{ animationDelay: `${i * 0.12}s` }}>
-            <div className={styles.iconWrap} style={{ borderColor: s.accent }}>
-              <span className={styles.icon}>{s.icon}</span>
+      <div className={styles.container}>
+        <div className={styles.sectionTag}>TRAINING SERVICES</div>
+        <div className={styles.grid}>
+          {services.map((s, i) => (
+            <div key={i} className={styles.card} style={{ animationDelay: `${i * 0.12}s` }}>
+              <div className={styles.iconWrap} style={{ borderColor: s.accent }}>
+                <span className={styles.icon}>{s.icon}</span>
+              </div>
+              <h3 className={styles.cardTitle}>{s.title}</h3>
+              <p className={styles.cardDesc}>{s.desc}</p>
+              <div className={styles.cardLine} style={{ background: s.accent }}></div>
             </div>
-            <h3 className={styles.cardTitle}>{s.title}</h3>
-            <p className={styles.cardDesc}>{s.desc}</p>
-            <div className={styles.cardLine} style={{ background: s.accent }}></div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </section>
   );

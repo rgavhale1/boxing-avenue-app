@@ -13,29 +13,31 @@ export default function Hero({ onBookTrial }) {
 
   return (
     <section className={styles.hero} id="home">
-      <div className={styles.container}>
-        <div className={styles.content}>
-          <p className={styles.tag}>PERSONAL TRAINING</p>
-          <h1 className={styles.title}>
-            STRONGER<br />EVERY DAY.
-          </h1>
-          <p className={styles.subtitle}>
-            Personalized training. Real results.<br />Built around you.
-          </p>
+      <div className={styles.heroInner}>
+        <div className={styles.container}>
+          <div className={styles.content}>
+            <p className={styles.tag}>PERSONAL TRAINING</p>
+            <h1 className={styles.title}>
+              STRONGER<br />EVERY DAY.
+            </h1>
+            <p className={styles.subtitle}>
+              Personalized training. Real results.<br />Built around you.
+            </p>
 
-          <div className={styles.buttons}>
-            <button className={styles.bookBtn} onClick={onBookTrial}>
-              BOOK A SESSION
-            </button>
-            <Link to="/book" className={styles.programsBtn}>
-              OUR PROGRAMS →
-            </Link>
+            <div className={styles.buttons}>
+              <button className={styles.bookBtn} onClick={onBookTrial}>
+                BOOK A SESSION
+              </button>
+              <Link to="/book" className={styles.programsBtn}>
+                OUR PROGRAMS →
+              </Link>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className={styles.sliderWrapper}>
-        <ImageSlider slides={heroSlides} />
+        <div className={styles.sliderWrapper}>
+          <ImageSlider slides={heroSlides} />
+        </div>
       </div>
     </section>
   );

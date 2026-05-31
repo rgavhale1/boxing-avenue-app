@@ -12,7 +12,8 @@ const AdminDashboard = () => {
     mobile: '',
     email: '',
     time: '',
-    program: '',
+    programType: '',
+    service: '',
     registeredDate: '',
   });
   const token = localStorage.getItem('token');
@@ -29,7 +30,7 @@ const AdminDashboard = () => {
     });
 
     const res = await fetch(
-      `https://boxing-app-management.onrender.com/api/find/joinedusers?${params}`,
+      `http://localhost:8080/api/find/joinedusers?${params}`,
       {
         headers: { Authorization: token },
       }
@@ -59,7 +60,8 @@ const AdminDashboard = () => {
       mobile: '',
       email: '',
       time: '',
-      program: '',
+      programType: '',
+      service: '',
       registeredDate: '',
     };
     setFilters(clearedFilters);
@@ -98,7 +100,8 @@ const AdminDashboard = () => {
           <input name="mobile" placeholder="Mobile" value={filters.mobile} onChange={handleChange} className={styles.input} />
           <input name="email" placeholder="Email" value={filters.email} onChange={handleChange} className={styles.input} />
           <input name="time" placeholder="Time" value={filters.time} onChange={handleChange} className={styles.input} />
-          <input name="program" placeholder="Program" value={filters.program} onChange={handleChange} className={styles.input} />
+          <input name="programType" placeholder="Program Type" value={filters.programType} onChange={handleChange} className={styles.input} />
+          <input name="service" placeholder="Service" value={filters.service} onChange={handleChange} className={styles.input} />
           <input type="date" name="registeredDate" value={filters.registeredDate} onChange={handleChange} className={styles.input} />
         </div>
 
@@ -121,14 +124,15 @@ const AdminDashboard = () => {
                 <th>Mobile</th>
                 <th>Email</th>
                 <th>Time</th>
-                <th>Program</th>
+                <th>Program Type</th>
+                <th>Service</th>
                 <th>Date</th>
               </tr>
             </thead>
             <tbody>
               {users.length === 0 ? (
                 <tr>
-                  <td colSpan="6" className={styles.noData}>
+                  <td colSpan="7" className={styles.noData}>
                     No results found.
                   </td>
                 </tr>
@@ -139,7 +143,8 @@ const AdminDashboard = () => {
                     <td>{u.mobile}</td>
                     <td>{u.email}</td>
                     <td>{u.time}</td>
-                    <td>{u.program}</td>
+                    <td>{u.programType || '-'}</td>
+                    <td>{u.service || '-'}</td>
                     <td>{formatDate(u.registeredDate)}</td>
                   </tr>
                 ))

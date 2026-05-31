@@ -1,6 +1,6 @@
 .dashboardPage {
   min-height: 100vh;
-  padding: 100px 48px 60px;
+  padding: calc(var(--navbar-offset) + 20px) var(--site-px) 60px;
   background: linear-gradient(180deg, #0f121f 0%, #161a2a 100%);
   color: #f4f6ff;
 }
@@ -65,6 +65,7 @@
   color: #f8fafc;
   outline: none;
   transition: border-color 0.2s ease, background 0.2s ease;
+  box-sizing: border-box;
 }
 
 .input:focus {
@@ -112,7 +113,7 @@
 .table {
   width: 100%;
   border-collapse: collapse;
-  min-width: 760px;
+  min-width: 1000px;
 }
 
 .table th,
@@ -125,6 +126,7 @@
   background: rgba(255, 255, 255, 0.08);
   color: #f8fafc;
   font-weight: 700;
+  white-space: nowrap;
 }
 
 .table tr {
@@ -171,7 +173,7 @@
     align-items: flex-start;
   }
 
-  .table {
-    min-width: 100%;
+  .dashboardPage {
+    padding: calc(var(--navbar-offset) + 8px) var(--site-px) 40px;
   }
 }

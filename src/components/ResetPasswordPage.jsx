@@ -38,7 +38,7 @@ const ResetPasswordPage = ({ token }) => {
 
     try {
       const res = await fetch(
-        `https://boxing-app-management.onrender.com/api/auth/reset-password?token=${encodeURIComponent(resetToken)}&newPassword=${encodeURIComponent(password)}`,
+        `http://localhost:8080/api/auth/reset-password?token=${encodeURIComponent(resetToken)}&newPassword=${encodeURIComponent(password)}`,
         { method: "POST" }
       );
 
