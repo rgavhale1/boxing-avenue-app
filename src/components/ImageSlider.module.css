@@ -22,7 +22,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at top right, rgba(245, 197, 24, 0.15), transparent 45%);
+  background: radial-gradient(circle at top right, rgba(245,197,24,0.15), transparent 45%);
   pointer-events: none;
 }
 
@@ -41,10 +41,10 @@
   transform: translateY(-50%);
   width: 42px;
   height: 42px;
-  font-size: 20px;
+  font-size: 22px;
   border-radius: 50%;
-  border: 2px solid rgba(255, 255, 255, 0.15);
-  background: rgba(0, 0, 0, 0.6);
+  border: 2px solid rgba(255,255,255,0.15);
+  background: rgba(0,0,0,0.6);
   color: var(--white);
   cursor: pointer;
   display: flex;
@@ -52,21 +52,17 @@
   justify-content: center;
   transition: all 0.2s ease;
   z-index: 2;
+  touch-action: manipulation;
 }
 
 .navBtn:hover {
-  background: rgba(245, 197, 24, 0.95);
+  background: rgba(245,197,24,0.95);
   color: var(--black);
   border-color: var(--yellow);
 }
 
-.prevBtn {
-  left: 16px;
-}
-
-.nextBtn {
-  right: 16px;
-}
+.prevBtn { left: 16px; }
+.nextBtn { right: 16px; }
 
 .dotsContainer {
   display: flex;
@@ -79,10 +75,11 @@
   width: 12px;
   height: 12px;
   border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  border: 1px solid rgba(255,255,255,0.5);
   background-color: transparent;
   cursor: pointer;
   transition: all 0.2s ease;
+  touch-action: manipulation;
 }
 
 .dot:hover,
@@ -93,32 +90,17 @@
 }
 
 @media (max-width: 768px) {
-  .sliderContainer {
-    max-width: 100%;
-  }
-
-  .slider {
-    min-height: 220px;
-  }
-
-  .navBtn {
-    width: 36px;
-    height: 36px;
-    font-size: 18px;
-  }
-
-  .prevBtn {
-    left: 10px;
-  }
-
-  .nextBtn {
-    right: 10px;
-  }
+  .slider { min-height: 220px; }
+  .navBtn { width: 36px; height: 36px; font-size: 18px; }
+  .prevBtn { left: 10px; }
+  .nextBtn { right: 10px; }
+  .dotsContainer { margin-top: 14px; gap: 8px; }
 }
 
 @media (max-width: 480px) {
-  .slider { min-height: 180px; max-height: 280px; }
-  .navBtn { width: 32px; height: 32px; font-size: 16px; }
+  .slider { min-height: 180px; max-height: 260px; border-radius: 12px; }
+  .navBtn { width: 34px; height: 34px; font-size: 17px; }
   .prevBtn { left: 8px; }
   .nextBtn { right: 8px; }
+  .dot { width: 10px; height: 10px; }
 }

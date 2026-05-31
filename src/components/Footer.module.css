@@ -13,6 +13,7 @@
   gap: 32px;
 }
 
+/* Equal 4-column grid */
 .topSection {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -51,6 +52,7 @@
 .contactSection p, .addressSection p {
   margin: 0; font-family: var(--font-body);
   font-size: 15px; color: var(--off-white); line-height: 1.6;
+  word-break: break-word;
 }
 
 .socialLinks { display: flex; gap: 12px; flex-wrap: wrap; }
@@ -77,19 +79,27 @@
 
 .copyright { margin: 0; font-size: 12px; color: var(--muted); }
 
-/* ── Mobile ── */
-@media (max-width: 768px) {
+/* ── Tablet ── */
+@media (max-width: 900px) {
   .footer { padding: 40px var(--site-px) 28px; }
-  .topSection { grid-template-columns: 1fr 1fr; gap: 24px; }
-
-  .logoWrap { width: 100px; height: 100px; }
-  .logoImage { height: 76px; }
-  .contactSection p, .addressSection p { font-size: 14px; }
-  .socialLinks { justify-content: flex-start; }
-
-  .bottomSection { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .topSection { grid-template-columns: 1fr 1fr; gap: 28px; }
+  .logoWrap { width: 110px; height: 110px; }
+  .logoImage { height: 86px; }
 }
 
-@media (max-width: 480px) {
-  .footer { padding: 36px var(--site-px) 24px; }
+/* ── Mobile ── */
+@media (max-width: 600px) {
+  .footer { padding: 36px var(--site-px) 24px; margin-top: 0; }
+  /* Single column — each section stacks */
+  .topSection {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .logoSection { align-items: center; justify-content: flex-start; }
+  .logoWrap { width: 90px; height: 90px; }
+  .logoImage { height: 70px; }
+  .contactSection p, .addressSection p { font-size: 14px; }
+  .contactSection h3, .addressSection h3, .socialSection h3 { font-size: 11px; }
+  .bottomSection { padding-top: 16px; }
+  .copyright { font-size: 11px; }
 }

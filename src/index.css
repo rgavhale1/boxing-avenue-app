@@ -17,17 +17,17 @@
   --font-condensed: 'Barlow Condensed', sans-serif;
   --font-body:      'Barlow', sans-serif;
 
-  /* ── Layout tokens — used by EVERY section and the navbar ── */
-  --site-max:       1200px;   /* max content width */
-  --site-px:        clamp(16px, 4vw, 48px);  /* responsive horizontal padding */
-  --navbar-offset:  148px;    /* desktop: logo 100px + 24px*2 padding */
+  /* ── Layout tokens ── */
+  --site-max:       1200px;
+  --site-px:        clamp(16px, 4vw, 48px);
+  --navbar-offset:  148px;
 }
 
 @media (max-width: 900px) {
-  :root { --navbar-offset: 88px; }   /* logo 56px + 16px*2 */
+  :root { --navbar-offset: 88px; }
 }
 @media (max-width: 480px) {
-  :root { --navbar-offset: 78px; }   /* logo 46px + 16px*2 */
+  :root { --navbar-offset: 74px; }
 }
 
 html { scroll-behavior: smooth; }
@@ -37,11 +37,19 @@ body {
   color: var(--white);
   font-family: var(--font-body);
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
+
+/* Prevent text size adjustment on rotation */
+html { -webkit-text-size-adjust: 100%; }
 
 button { cursor: pointer; border: none; outline: none; font-family: var(--font-condensed); }
 a { text-decoration: none; color: inherit; }
 input, select, textarea { font-family: var(--font-body); }
+
+/* Better tap targets on mobile */
+button, a, [role="button"] { -webkit-tap-highlight-color: transparent; }
 
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--dark); }

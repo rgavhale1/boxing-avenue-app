@@ -32,6 +32,7 @@ const PROGRAMS = [
     shortLabel: "Hybrid (One-on-One)",
     desc: "Personalized training for faster results",
     price: "₹15000",
+    perMonth: "₹15,000 / month",
     originalPrice: null,
     subtitle: "STRENGTH + CONDITIONING + SKILL",
     features: [
@@ -49,6 +50,7 @@ const PROGRAMS = [
     shortLabel: "Elite Program",
     desc: "Complete transformation & peak performance",
     price: "₹20000",
+    perMonth: "₹20,000 / month",
     originalPrice: "₹25000",
     subtitle: "BREATHWORK + STRENGTH + COMBAT + MOBILITY",
     features: [
@@ -216,7 +218,10 @@ export default function BookingForm({ isOpen = true, onClose = () => {}, embedde
               <div className={styles.progCardBody}>
                 <div className={styles.progTitleRow}>
                   <h3 className={styles.progName}>{prog.label}</h3>
-                  <span className={styles.progPriceInline}>{prog.price}</span>
+                  <div className={styles.progPriceBlock}>
+                    <span className={styles.progPriceInline}>{prog.price}</span>
+                    <span className={styles.progPerMonth}>/month</span>
+                  </div>
                 </div>
                 {prog.subtitle && <p className={styles.progSubtitle}>{prog.subtitle}</p>}
               </div>

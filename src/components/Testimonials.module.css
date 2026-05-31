@@ -56,4 +56,6 @@
 
 @media (max-width: 480px) {
   .testimonials { padding: 40px var(--site-px); }
+  .title { font-size: 20px; letter-spacing: 1.5px; }
+  .quote { font-size: 14px; }
 }

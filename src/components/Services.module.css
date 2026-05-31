@@ -69,4 +69,7 @@
   .services { padding: 40px var(--site-px); }
   .grid { grid-template-columns: 1fr; }
   .card { padding: 24px 20px; }
+  .cardTitle { font-size: 14px; }
+  .iconWrap { width: 46px; height: 46px; margin-bottom: 14px; }
+  .sectionTag { margin-bottom: 24px; }
 }
