@@ -13,6 +13,7 @@ import {
   Repeat,
 } from 'lucide-react';
 import styles from "./BookingForm.module.css";
+import groupClassesImg from "./groupclasses.jpg";
 
 const TIME_SLOTS = [
   "6 AM - 7 AM",
@@ -423,6 +424,15 @@ export default function BookingForm({ isOpen = true, onClose = () => {}, embedde
         <p className={styles["bs-footer-note"]}>
           ✓ You'll receive a confirmation via email.
         </p>
+
+        {/* Group Classes Banner */}
+        <div className={styles["bs-group-banner"]}>
+          <img
+            src={groupClassesImg}
+            alt="Limited Seats for Group Classes"
+            className={styles["bs-group-banner-img"]}
+          />
+        </div>
       </div>
     </>
   );
