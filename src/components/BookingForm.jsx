@@ -129,13 +129,13 @@ export default function BookingForm({ isOpen = true, onClose = () => {}, embedde
       // Format program details as a single string
       let programTypeString = "";
       if (selectedProg) {
-        programTypeString = `${selectedProg.label}\n₹${selectedProg.price.replace('₹', '')}\n${selectedProg.subtitle}`;
+        programTypeString = `${selectedProg.label}\n₹${selectedProg.price.replace('₹', '')} / MONTH\n${selectedProg.subtitle}`;
         if (selectedProg.originalPrice) {
           programTypeString += `\n₹${selectedProg.originalPrice.replace('₹', '')}\nSAVE ${discountPercentage}%`;
         }
       }
 
-      const response = await fetch("http://localhost:8080/api/join", {
+      const response = await fetch("https://boxing-app-management.onrender.com/api/join", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -332,7 +332,6 @@ export default function BookingForm({ isOpen = true, onClose = () => {}, embedde
             className={`${styles["bs-select-trigger"]} ${serviceOpen ? styles["open"] : ""}`}
             onClick={() => { setServiceOpen(!serviceOpen); setProgramOpen(false); }}
           >
-            <span className={styles["bs-input-icon"]}>{selectedService ? selectedService.icon : "🥊"}</span>
             <span className={`${styles["bs-select-val"]} ${!form.service ? styles["placeholder"] : ""}`}>
               {selectedService ? selectedService.label : "Select Service"}
             </span>
@@ -361,7 +360,6 @@ export default function BookingForm({ isOpen = true, onClose = () => {}, embedde
             className={`${styles["bs-select-trigger"]} ${programOpen ? styles["open"] : ""}`}
             onClick={() => { setProgramOpen(!programOpen); setServiceOpen(false); }}
           >
-            <span className={styles["bs-input-icon"]}>{selectedProg ? selectedProg.icon : "🏋"}</span>
             <span className={`${styles["bs-select-val"]} ${!form.program ? styles["placeholder"] : ""}`}>
               {selectedProg ? selectedProg.shortLabel : "Select Program"}
             </span>

@@ -2,6 +2,29 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './AdminDashboard.module.css';
 
+const PROGRAMS = [
+  {
+    id: "hybrid",
+    label: "Hybrid Program (One-on-One)",
+    price: "₹15000",
+    perMonth: "₹15,000 / month",
+    originalPrice: null,
+    discount: null,
+    subtitle: "STRENGTH + CONDITIONING + SKILL",
+    tag: "POPULAR",
+  },
+  {
+    id: "elite",
+    label: "Elite Program",
+    price: "₹20000",
+    perMonth: "₹20,000 / month",
+    originalPrice: "₹25000",
+    discount: "20%",
+    subtitle: "BREATHWORK + STRENGTH + COMBAT + MOBILITY",
+    tag: "PREMIUM",
+  },
+];
+
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const [users, setUsers] = useState([]);
@@ -30,7 +53,7 @@ const AdminDashboard = () => {
     });
 
     const res = await fetch(
-      `http://localhost:8080/api/find/joinedusers?${params}`,
+      `https://boxing-app-management.onrender.com/api/find/joinedusers?${params}`,
       {
         headers: { Authorization: token },
       }
@@ -80,6 +103,25 @@ const AdminDashboard = () => {
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const year = date.getFullYear();
     return `${day}-${month}-${year}`;
+  };
+
+  const getProgramDetails = (programName) => {
+    if (!programName) return null;
+    
+    // If it's from the database with newlines, parse it
+    if (programName.includes('\n')) {
+      const lines = programName.split('\n').filter(line => line.trim());
+      return {
+        label: lines[0] || '',
+        price: lines[1]?.replace('/ MONTH', '').trim() || '',
+        subtitle: lines[2] || '',
+        originalPrice: lines[3] || null,
+        discount: lines[4]?.replace('SAVE ', '')?.replace('%', '') ? `${lines[4].replace('SAVE ', '')}` : null,
+      };
+    }
+    
+    // Otherwise look up from PROGRAMS array
+    return PROGRAMS.find(p => p.label === programName || p.label.includes(programName));
   };
 
   return (
@@ -137,17 +179,41 @@ const AdminDashboard = () => {
                   </td>
                 </tr>
               ) : (
-                users.map((u, i) => (
-                  <tr key={i}>
-                    <td>{u.name}</td>
-                    <td>{u.mobile}</td>
-                    <td>{u.email}</td>
-                    <td>{u.time}</td>
-                    <td>{u.programType || '-'}</td>
-                    <td>{u.service || '-'}</td>
-                    <td>{formatDate(u.registeredDate)}</td>
-                  </tr>
-                ))
+                users.map((u, i) => {
+                  const programDetails = getProgramDetails(u.programType);
+                  return (
+                    <tr key={i}>
+                      <td>{u.name}</td>
+                      <td>{u.mobile}</td>
+                      <td>{u.email}</td>
+                      <td>{u.time}</td>
+                      <td className={styles.programCell}>
+                        {programDetails ? (
+                          <div className={styles.programInfo}>
+                            <div className={styles.programName}>{programDetails.label}</div>
+                            <div className={styles.priceRow}>
+                              {programDetails.originalPrice && (
+                                <span className={styles.originalPrice}>{programDetails.originalPrice}</span>
+                              )}
+                              <span className={styles.programPrice}>
+                                {programDetails.price}
+                                <span className={styles.monthText}>/ MONTH</span>
+                              </span>
+                              {programDetails.discount && (
+                                <span className={styles.discountBadge}>{programDetails.discount}% OFF</span>
+                              )}
+                            </div>
+                            <div className={styles.programSubtitle}>{programDetails.subtitle}</div>
+                          </div>
+                        ) : (
+                          u.programType || '-'
+                        )}
+                      </td>
+                      <td>{u.service || '-'}</td>
+                      <td>{formatDate(u.registeredDate)}</td>
+                    </tr>
+                  );
+                })
               )}
             </tbody>
           </table>
